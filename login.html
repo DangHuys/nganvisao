@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToanTitan.VN - Đăng nhập Wi-Fi miễn phí</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-color: #f57a0a;
+            --primary-hover: #d46505;
+            --text-light: #f8fafc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body, html {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            background-color: #0f172a;
+        }
+
+        /* Background Slider giả lập */
+        .slider-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+        }
+
+        .slider-bg ul {
+            list-style: none;
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .slider-bg li {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            animation: backgroundFade 25s infinite;
+        }
+
+        .slider-bg li:nth-child(1) { animation-delay: 0s; }
+        .slider-bg li:nth-child(2) { animation-delay: 5s; }
+        .slider-bg li:nth-child(3) { animation-delay: 10s; }
+        .slider-bg li:nth-child(4) { animation-delay: 15s; }
+        .slider-bg li:nth-child(5) { animation-delay: 20s; }
+
+        .slider-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.5);
+        }
+
+        @keyframes backgroundFade {
+            0% { opacity: 0; transform: scale(1); }
+            8% { opacity: 1; }
+            20% { opacity: 1; }
+            28% { opacity: 0; transform: scale(1.03); }
+            100% { opacity: 0; }
+        }
+
+        /* Giao diện nội dung chính */
+        .main-container {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .header-brand {
+            text-align: center;
+            color: var(--text-light);
+        }
+        .header-brand h1 {
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .header-brand p {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 6px;
+        }
+
+        /* Form Đăng nhập Glassmorphism */
+        .login-card {
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 30px 25px;
+            border-radius: 24px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .login-card h2 {
+            color: var(--text-light);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 15px;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 15px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--primary-color);
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.45);
+        }
+
+        .btn-connect {
+            width: 100%;
+            padding: 14px;
+            background: var(--primary-color);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 15px rgba(245, 122, 10, 0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-connect:hover {
+            background: var(--primary-hover);
+        }
+
+        .btn-connect:disabled {
+            background: #64748b;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .terms-text {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 12px;
+            margin-top: 15px;
+        }
+
+        .footer-navigation {
+            width: 100%;
+            max-width: 450px;
+            display: flex;
+            justify-content: space-between;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+        }
+
+        .footer-navigation a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="slider-bg">
+        <ul>
+            <li><img src="images/pic1.jpg" alt="Background 1"></li>
+            <li><img src="images/pic2.jpg" alt="Background 2"></li>
+            <li><img src="images/pic3.jpg" alt="Background 3"></li>
+            <li><img src="images/pic4.jpg" alt="Background 4"></li>
+            <li><img src="images/pic5.jpg" alt="Background 5"></li>
+        </ul>
+    </div>
+
+    <div class="main-container">
+        
+        <div class="header-brand">
+            <h1>ToanTitan Network</h1>
+            <p>Vui lòng điền thông tin để truy cập Wi-Fi tốc độ cao</p>
+        </div>
+
+        <div class="login-card">
+            <h2>Đăng Ký Truy Cập</h2>
+            
+            <form id="marketingForm" onSubmit="submitMarketingData(event)">
+                <div class="input-group">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="txtHoTen" placeholder="Họ và tên của bạn" class="input-field" required>
+                </div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-calendar"></i>
+                    <input type="number" id="txtNamSinh" placeholder="Năm sinh (Ví dụ: 1995)" class="input-field" min="1940" max="2026" required>
+                </div>
+
+                <div class="input-group">
+                    <i class="fa-solid fa-phone"></i>
+                    <input type="tel" id="txtSdt" placeholder="Số điện thoại" class="input-field" pattern="[0-9]{9,11}" title="Vui lòng nhập đúng định dạng số điện thoại" required>
+                </div>
+                
+                <button class="btn-connect" type="submit" id="btnSubmit">
+                    <span>Kết nối Internet</span> <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <div class="terms-text">
+                <i class="fa-regular fa-circle-check" style="color: #4ade80;"></i> Hệ thống tự động bảo mật thông tin khách hàng
+            </div>
+        </div>
+
+        <div class="footer-navigation">
+            <div><i class="fa-solid fa-globe"></i> <a href="https://toantitan.vn" target="_blank">https://ToanTitan.vn</a></div>
+            <div><i class="fa-regular fa-circle-question"></i> Trợ giúp?</div>
+        </div>
+
+    </div>
+
+    $(if chap-id)
+    <form name="sendin" action="$(link-login-only)" method="post" id="third" style="display:none">
+        <input type="hidden" name="username" />
+        <input type="hidden" name="password" />
+        <input type="hidden" name="dst" value="https://toantitan.vn" />
+        <input type="hidden" name="popup" value="false" />
+    </form>
+
+    <script type="text/javascript" src="/md5.js"></script>
+    <script type="text/javascript">
+        function doLogin() {
+            var password = '123'; // Pass mặc định bypass qua Mikrotik hotspot
+            var username = document.getElementById('txtSdt').value; // Lấy SĐT làm username đăng nhập ẩn luôn
+            
+            document.sendin.username.value = username;
+            document.sendin.password.value = hexMD5('$(chap-id)' + password + '$(chap-challenge)');
+            document.sendin.submit();
+            return false;
+        }
+    </script>
+    $(endif)
+
+    <script type="text/javascript">
+        // CHÈN URL WEB APP CỦA GOOGLE APPS SCRIPT VÀO ĐÂY
+        const GOOGLE_APP_URL = 'https://script.google.com/macros/s/AKfycbwxTjAUsm0weC_cvW2OFan2tSwjuHpu12_B0tincpOJZyZBjJUoz04F8_f-9kObJ8Ro/exec';
+
+        function submitMarketingData(event) {
+            event.preventDefault(); // Chặn hành động tải lại trang của form
+            
+            const btn = document.getElementById('btnSubmit');
+            btn.disabled = true;
+            btn.innerHTML = '<span>Đang xác thực...</span> <i class="fa-solid fa-spinner fa-spin"></i>';
+
+            // Gom dữ liệu từ các ô input
+            const payload = {
+                hoTen: document.getElementById('txtHoTen').value,
+                namSinh: document.getElementById('txtNamSinh').value,
+                soDienThoai: document.getElementById('txtSdt').value
+            };
+
+            // Dùng hàm fetch gửi bất đồng bộ (AJAX) sang Google Server
+            fetch(GOOGLE_APP_URL, {
+                method: 'POST',
+                mode: 'no-cors', // Chế độ no-cors bắt buộc để vượt rào cản phân quyền mạng của Router
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            })
+            .then(() => {
+                // Sau khi gửi data đi, lập tức gọi hàm mở mạng của Mikrotik
+                if (typeof doLogin === "function") {
+                    doLogin();
+                } else {
+                    alert("Kết nối thành công! (Chế độ test cục bộ)");
+                    btn.disabled = false;
+                    btn.innerHTML = '<span>Kết nối Internet</span> <i class="fa-solid fa-arrow-right"></i>';
+                }
+            })
+            .catch((error) => {
+                console.error('Lỗi lưu trữ:', error);
+                // Nếu lỗi đường truyền mạng, vẫn cho khách vào mạng để tránh trải nghiệm xấu
+                if (typeof doLogin === "function") doLogin();
+            });
+        }
+    </script>
+</body>
+</html>
