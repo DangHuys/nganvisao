@@ -3,156 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ToanTitan.VN - Đăng nhập Wi-Fi miễn phí</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <title>ToanTitan Network</title>
     <style>
-        :root {
-            --primary-color: #f57a0a;
-            --primary-hover: #d46505;
-            --text-light: #f8fafc;
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
-        body, html { width: 100%; height: 100%; overflow: hidden; background-color: #0f172a; }
-        .slider-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
-        .slider-bg ul { list-style: none; width: 100%; height: 100%; position: relative; }
-        .slider-bg li { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; animation: backgroundFade 25s linear infinite; }
-        .slider-bg li:nth-child(1) { animation-delay: 0s; }
-        .slider-bg li:nth-child(2) { animation-delay: 5s; }
-        .slider-bg li:nth-child(3) { animation-delay: 10s; }
-        .slider-bg li:nth-child(4) { animation-delay: 15s; }
-        .slider-bg li:nth-child(5) { animation-delay: 20s; }
-        .slider-bg img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.4) contrast(1.1); }
-        @keyframes backgroundFade {
-            0% { opacity: 0; transform: scale(1); }
-            4% { opacity: 1; }
-            20% { opacity: 1; }
-            24% { opacity: 0; transform: scale(1.04); }
-            100% { opacity: 0; }
-        }
-        .main-container { position: relative; z-index: 2; width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: space-between; align-items: center; padding: 40px 20px; overflow-y: auto; }
-        .header-brand { text-align: center; color: var(--text-light); margin-top: 10px; }
-        .header-brand h1 { font-size: 26px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
-        .header-brand p { font-size: 14px; opacity: 0.9; margin-top: 6px; text-shadow: 0 1px 2px rgba(0,0,0,0.5); }
-        .login-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.15); padding: 35px 25px; border-radius: 24px; width: 100%; max-width: 420px; box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5); text-align: center; margin: 20px 0; }
-        .login-card h2 { color: var(--text-light); font-size: 18px; font-weight: 600; margin-bottom: 25px; }
-        .input-group { position: relative; margin-bottom: 18px; }
-        .input-group i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.6); font-size: 15px; }
-        .input-field { width: 100%; padding: 14px 15px 14px 45px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; color: #fff; font-size: 14px; outline: none; transition: all 0.3s ease; }
-        .input-field:focus { background: rgba(255, 255, 255, 0.15); border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(245, 122, 10, 0.2); }
-        .input-field::placeholder { color: rgba(255, 255, 255, 0.5); }
-        .btn-connect { width: 100%; padding: 14px; background: var(--primary-color); border: none; border-radius: 12px; color: white; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 4px 15px rgba(245, 122, 10, 0.4); display: flex; justify-content: center; align-items: center; gap: 8px; }
-        .btn-connect:hover { background: var(--primary-hover); transform: translateY(-1px); }
-        .btn-connect:disabled { background: #475569; cursor: not-allowed; box-shadow: none; transform: none; }
-        .terms-text { color: rgba(255, 255, 255, 0.7); font-size: 12px; margin-top: 18px; }
-        .footer-navigation { width: 100%; max-width: 450px; display: flex; justify-content: space-between; color: rgba(255, 255, 255, 0.6); font-size: 13px; text-shadow: 0 1px 2px rgba(0,0,0,0.5); margin-bottom: 10px; }
-        .footer-navigation a { color: rgba(255, 255, 255, 0.6); text-decoration: none; }
-        .footer-navigation a:hover { color: var(--primary-color); }
+        body, html { width: 100%; height: 100%; overflow: hidden; background-color: #0f172a; display: flex; align-items: center; justify-content: center; }
+        .login-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); padding: 35px; border-radius: 24px; width: 90%; max-width: 400px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+        .input-field { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; }
+        .btn-connect { width: 100%; padding: 12px; background: #f57a0a; border: none; border-radius: 8px; color: white; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <div class="slider-bg">
-        <ul>
-            <li><img src="images/pic1.jpg" alt="Background 1"></li>
-            <li><img src="images/pic2.jpg" alt="Background 2"></li>
-            <li><img src="images/pic3.jpg" alt="Background 3"></li>
-            <li><img src="images/pic4.jpg" alt="Background 4"></li>
-            <li><img src="images/pic5.jpg" alt="Background 5"></li>
-        </ul>
+    <div class="login-card">
+        <h2>Đăng Ký Truy Cập</h2>
+        <form id="marketingForm">
+            <input type="text" id="txtHoTen" placeholder="Họ và tên" class="input-field" required>
+            <input type="tel" id="txtSdt" placeholder="Số điện thoại" class="input-field" required>
+            <button type="submit" class="btn-connect" id="btnSubmit">Kết nối Internet</button>
+        </form>
     </div>
 
-    <div class="main-container">
-        <div class="header-brand">
-            <h1>ToanTitan Network</h1>
-            <p>Vui lòng điền thông tin để truy cập Wi-Fi tốc độ cao</p>
-        </div>
+    <script>
+        const GOOGLE_APP_URL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
 
-        <div class="login-card">
-            <h2>Đăng Ký Truy Cập</h2>
-            <form id="marketingForm" onSubmit="submitMarketingData(event)">
-                <div class="input-group">
-                    <i class="fa-solid fa-user"></i>
-                    <input type="text" id="txtHoTen" placeholder="Họ và tên của bạn" class="input-field" required>
-                </div>
-                <div class="input-group">
-                    <i class="fa-solid fa-calendar"></i>
-                    <input type="number" id="txtNamSinh" placeholder="Năm sinh (Ví dụ: 1995)" class="input-field" min="1940" max="2026" required>
-                </div>
-                <div class="input-group">
-                    <i class="fa-solid fa-phone"></i>
-                    <input type="tel" id="txtSdt" placeholder="Số điện thoại" class="input-field" pattern="[0-9]{9,11}" title="Vui lòng nhập đúng định dạng số điện thoại" required>
-                </div>
-                <button class="btn-connect" type="submit" id="btnSubmit">
-                    <span>Kết nối Internet</span> <i class="fa-solid fa-arrow-right"></i>
-                </button>
-            </form>
-            <div class="terms-text">
-                <i class="fa-regular fa-circle-check" style="color: #4ade80;"></i> Hệ thống tự động bảo mật thông tin khách hàng
-            </div>
-        </div>
-
-        <div class="footer-navigation">
-            <div><i class="fa-solid fa-globe"></i> <a href="https://toantitan.vn" target="_blank">https://ToanTitan.vn</a></div>
-            <div><i class="fa-regular fa-circle-question"></i> Trợ giúp?</div>
-        </div>
-    </div>
-
-    <script type="text/javascript">
-        const GOOGLE_APP_URL = 'https://script.google.com/macros/s/AKfycbwxTjAUsm0weC_cvW2OFan2tSwjuHpu12_B0tincpOJZyZBjJUoz04F8_f-9kObJ8Ro/exec';
-
-        // Lấy thông số tham số động từ router truyền qua URL của Iframe
-        const urlParams = new URLSearchParams(window.location.search);
-        const loginUrl = urlParams.get('login_url');
-        const chapId = urlParams.get('chap_id');
-        const chapChallenge = urlParams.get('chap_challenge');
-
-        function submitMarketingData(event) {
-            event.preventDefault(); 
-            
+        document.getElementById('marketingForm').addEventListener('submit', function(e) {
+            e.preventDefault();
             const btn = document.getElementById('btnSubmit');
-            btn.disabled = true;
-            btn.innerHTML = '<span>Đang kết nối...</span> <i class="fa-solid fa-spinner fa-spin"></i>';
+            btn.innerText = "Đang kết nối...";
 
-            const sdtValue = document.getElementById('txtSdt').value;
-            const payload = {
-                hoTen: document.getElementById('txtHoTen').value,
-                namSinh: document.getElementById('txtNamSinh').value,
-                soDienThoai: sdtValue
-            };
-
-            // Bắn dữ liệu về Google Sheet ngầm
+            // 1. Gửi data về Sheet
             fetch(GOOGLE_APP_URL, {
                 method: 'POST',
-                mode: 'no-cors', 
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            }).catch(err => console.log("Gửi data sheet lỗi nhưng vẫn mở mạng", err));
+                mode: 'no-cors',
+                body: JSON.stringify({
+                    hoTen: document.getElementById('txtHoTen').value,
+                    sdt: document.getElementById('txtSdt').value
+                })
+            });
 
-            // Đẩy tín hiệu đăng nhập ngược về trang mẹ chứa Router
-            setTimeout(function() {
-                if (window.parent !== window) {
-                    window.parent.postMessage({
-                        action: loginUrl,
-                        params: {
-                            username: "wificongdong", // Đồng bộ tên tài khoản chung
-                            password: "123",        // Đồng bộ mật khẩu chung để Router băm MD5
-                            dst: "https://toantitan.vn",
-                            popup: "false",
-                            'chap-id': chapId,
-                            'chap-challenge': chapChallenge
-                        }
-                    }, "*");
-                } else {
-                    alert("Kết nối thành công! (Chế độ test cục bộ không có router)");
-                    btn.disabled = false;
-                    btn.innerHTML = '<span>Kết nối Internet</span> <i class="fa-solid fa-arrow-right"></i>';
-                }
-            }, 600);
-        }
+            // 2. Gửi tín hiệu về Router
+            window.parent.postMessage({
+                action: "login_request",
+                params: { username: "wificongdong", password: "123" }
+            }, "*");
+        });
     </script>
 </body>
 </html>
