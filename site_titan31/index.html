@@ -312,7 +312,7 @@
             
             const btn = document.getElementById('btnSubmit');
             btn.disabled = true;
-            btn.innerHTML = '<span>Đang xác thực...</span> <i class="fa-solid fa-spinner fa-spin"></i>';
+            btn.innerHTML = '<span>Đang kết nối...</span> <i class="fa-solid fa-spinner fa-spin"></i>';
 
             const payload = {
                 hoTen: document.getElementById('txtHoTen').value,
@@ -320,6 +320,7 @@
                 soDienThoai: document.getElementById('txtSdt').value
             };
 
+            // FIX: Bắn data lên Google Sheet ngầm (Không đợi phản hồi rườm rà)
             fetch(GOOGLE_APP_URL, {
                 method: 'POST',
                 mode: 'no-cors', 
@@ -327,8 +328,10 @@
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(payload)
-            })
-            .then(() => {
+            }).catch(err => console.log("Gửi data sheet lỗi nhưng vẫn cho đăng nhập mạng", err));
+
+            // Kích hoạt đăng nhập mạng ngay lập tức mà không sợ bị nghẽn đồng bộ
+            setTimeout(function() {
                 if (typeof doLogin === "function") {
                     doLogin();
                 } else {
@@ -336,11 +339,7 @@
                     btn.disabled = false;
                     btn.innerHTML = '<span>Kết nối Internet</span> <i class="fa-solid fa-arrow-right"></i>';
                 }
-            })
-            .catch((error) => {
-                console.error('Lỗi lưu trữ:', error);
-                if (typeof doLogin === "function") doLogin();
-            });
+            }, 600); // Trễ 600ms cực nhỏ để trình duyệt kịp phát gói tin fetch đi
         }
     </script>
 </body>
