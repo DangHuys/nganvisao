@@ -26,17 +26,17 @@
         body, html {
             width: 100%;
             height: 100%;
-            overflow-x: hidden;
+            overflow: hidden;
             background-color: #0f172a;
         }
 
-        /* Background Slider giả lập */
+        /* Sửa lại hệ thống slider hiển thị mượt và tránh màn hình đen */
         .slider-bg {
             position: fixed;
             top: 0;
             left: 0;
-            width: 100vw;
-            height: 100vh;
+            width: 100%;
+            height: 100%;
             z-index: 1;
         }
 
@@ -49,12 +49,15 @@
 
         .slider-bg li {
             position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
             opacity: 0;
-            animation: backgroundFade 25s infinite;
+            animation: backgroundFade 25s linear infinite;
         }
 
+        /* Phân chia delay chu kỳ 25 giây cho 5 ảnh (mỗi ảnh 5 giây hiển thị và mờ dần) */
         .slider-bg li:nth-child(1) { animation-delay: 0s; }
         .slider-bg li:nth-child(2) { animation-delay: 5s; }
         .slider-bg li:nth-child(3) { animation-delay: 10s; }
@@ -65,14 +68,15 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: brightness(0.5);
+            filter: brightness(0.4) contrast(1.1); /* Tăng độ tương phản để form chữ nổi bật hơn */
         }
 
+        /* Tối ưu hiệu ứng fade-in-out đè mượt mà */
         @keyframes backgroundFade {
             0% { opacity: 0; transform: scale(1); }
-            8% { opacity: 1; }
+            4% { opacity: 1; }
             20% { opacity: 1; }
-            28% { opacity: 0; transform: scale(1.03); }
+            24% { opacity: 0; transform: scale(1.04); }
             100% { opacity: 0; }
         }
 
@@ -81,41 +85,45 @@
             position: relative;
             z-index: 2;
             width: 100%;
-            min-height: 100vh;
+            height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             align-items: center;
             padding: 40px 20px;
+            overflow-y: auto; /* Hỗ trợ cuộn nếu màn hình điện thoại quá nhỏ */
         }
 
         .header-brand {
             text-align: center;
             color: var(--text-light);
+            margin-top: 10px;
         }
         .header-brand h1 {
             font-size: 26px;
             font-weight: 700;
             letter-spacing: 1px;
             text-transform: uppercase;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
         .header-brand p {
             font-size: 14px;
-            opacity: 0.8;
+            opacity: 0.9;
             margin-top: 6px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
 
         /* Form Đăng nhập Glassmorphism */
         .login-card {
-            background: rgba(255, 255, 255, 0.12);
+            background: rgba(15, 23, 42, 0.55); /* Đổi sang nền sẫm mờ để nhìn rõ form trên mọi loại ảnh nền */
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 30px 25px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            padding: 35px 25px;
             border-radius: 24px;
             width: 100%;
             max-width: 420px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
             text-align: center;
             margin: 20px 0;
         }
@@ -124,12 +132,12 @@
             color: var(--text-light);
             font-size: 18px;
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
         }
 
         .input-group {
             position: relative;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
         }
 
         .input-group i {
@@ -144,7 +152,7 @@
         .input-field {
             width: 100%;
             padding: 14px 15px 14px 45px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             border: 1px solid rgba(255, 255, 255, 0.15);
             border-radius: 12px;
             color: #fff;
@@ -154,12 +162,13 @@
         }
 
         .input-field:focus {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
             border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(245, 122, 10, 0.2);
         }
 
         .input-field::placeholder {
-            color: rgba(255, 255, 255, 0.45);
+            color: rgba(255, 255, 255, 0.5);
         }
 
         .btn-connect {
@@ -173,7 +182,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 15px rgba(245, 122, 10, 0.3);
+            box-shadow: 0 4px 15px rgba(245, 122, 10, 0.4);
             display: flex;
             justify-content: center;
             align-items: center;
@@ -182,18 +191,20 @@
 
         .btn-connect:hover {
             background: var(--primary-hover);
+            transform: translateY(-1px);
         }
 
         .btn-connect:disabled {
-            background: #64748b;
+            background: #475569;
             cursor: not-allowed;
             box-shadow: none;
+            transform: none;
         }
 
         .terms-text {
             color: rgba(255, 255, 255, 0.7);
             font-size: 12px;
-            margin-top: 15px;
+            margin-top: 18px;
         }
 
         .footer-navigation {
@@ -201,13 +212,18 @@
             max-width: 450px;
             display: flex;
             justify-content: space-between;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.6);
             font-size: 13px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
         }
 
         .footer-navigation a {
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.6);
             text-decoration: none;
+        }
+        .footer-navigation a:hover {
+            color: var(--primary-color);
         }
     </style>
 </head>
@@ -277,8 +293,8 @@
     <script type="text/javascript" src="/md5.js"></script>
     <script type="text/javascript">
         function doLogin() {
-            var password = '123'; // Pass mặc định bypass qua Mikrotik hotspot
-            var username = document.getElementById('txtSdt').value; // Lấy SĐT làm username đăng nhập ẩn luôn
+            var password = '123'; 
+            var username = document.getElementById('txtSdt').value; 
             
             document.sendin.username.value = username;
             document.sendin.password.value = hexMD5('$(chap-id)' + password + '$(chap-challenge)');
@@ -289,34 +305,30 @@
     $(endif)
 
     <script type="text/javascript">
-        // CHÈN URL WEB APP CỦA GOOGLE APPS SCRIPT VÀO ĐÂY
         const GOOGLE_APP_URL = 'https://script.google.com/macros/s/AKfycbwxTjAUsm0weC_cvW2OFan2tSwjuHpu12_B0tincpOJZyZBjJUoz04F8_f-9kObJ8Ro/exec';
 
         function submitMarketingData(event) {
-            event.preventDefault(); // Chặn hành động tải lại trang của form
+            event.preventDefault(); 
             
             const btn = document.getElementById('btnSubmit');
             btn.disabled = true;
             btn.innerHTML = '<span>Đang xác thực...</span> <i class="fa-solid fa-spinner fa-spin"></i>';
 
-            // Gom dữ liệu từ các ô input
             const payload = {
                 hoTen: document.getElementById('txtHoTen').value,
                 namSinh: document.getElementById('txtNamSinh').value,
                 soDienThoai: document.getElementById('txtSdt').value
             };
 
-            // Dùng hàm fetch gửi bất đồng bộ (AJAX) sang Google Server
             fetch(GOOGLE_APP_URL, {
                 method: 'POST',
-                mode: 'no-cors', // Chế độ no-cors bắt buộc để vượt rào cản phân quyền mạng của Router
+                mode: 'no-cors', 
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(payload)
             })
             .then(() => {
-                // Sau khi gửi data đi, lập tức gọi hàm mở mạng của Mikrotik
                 if (typeof doLogin === "function") {
                     doLogin();
                 } else {
@@ -327,7 +339,6 @@
             })
             .catch((error) => {
                 console.error('Lỗi lưu trữ:', error);
-                // Nếu lỗi đường truyền mạng, vẫn cho khách vào mạng để tránh trải nghiệm xấu
                 if (typeof doLogin === "function") doLogin();
             });
         }
