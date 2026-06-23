@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ToanTitan.VN - Đăng nhập Wi-Fi</title>
+    <title>ToanTitan.VN - Đăng nhập Wi-Fi miễn phí</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        :root { --primary-color: #f57a0a; --primary-hover: #d46505; --text-light: #f8fafc; }
+        :root {
+            --primary-color: #f57a0a;
+            --primary-hover: #d46505;
+            --text-light: #f8fafc;
+        }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
         body, html { width: 100%; height: 100%; overflow: hidden; background-color: #0f172a; }
         .slider-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
@@ -97,22 +101,14 @@
         </div>
     </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/blueimp-md5/2.19.0/js/md5.min.js"></script>
-
     <script type="text/javascript">
         const GOOGLE_APP_URL = 'https://script.google.com/macros/s/AKfycbwxTjAUsm0weC_cvW2OFan2tSwjuHpu12_B0tincpOJZyZBjJUoz04F8_f-9kObJ8Ro/exec';
 
-        function getUrlParam(param) {
-            const urlParams = new URLSearchParams(window.location.search);
-            return urlParams.get(param) || "";
-        }
-
-        // Lắng nghe phản hồi ngược từ trang cha (Router) gửi vào nếu cần xử lý giao diện thành công
-        window.addEventListener("message", function(event) {
-            if (event.data && event.data.status === "ok") {
-                console.log("Router báo mở mạng thành công!");
-            }
-        });
+        // Lấy thông số tham số động từ router truyền qua URL của Iframe
+        const urlParams = new URLSearchParams(window.location.search);
+        const loginUrl = urlParams.get('login_url');
+        const chapId = urlParams.get('chap_id');
+        const chapChallenge = urlParams.get('chap_challenge');
 
         function submitMarketingData(event) {
             event.preventDefault(); 
@@ -125,47 +121,33 @@
             const payload = {
                 hoTen: document.getElementById('txtHoTen').value,
                 namSinh: document.getElementById('txtNamSinh').value,
-                soDienThoai: sdtValue,
-                macAddress: getUrlParam('client_mac')
+                soDienThoai: sdtValue
             };
 
-            // 1. Gửi dữ liệu đồng bộ lên Google Sheet ngầm
+            // Bắn dữ liệu về Google Sheet ngầm
             fetch(GOOGLE_APP_URL, {
                 method: 'POST',
                 mode: 'no-cors', 
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
-            }).catch(err => console.log("Lỗi gửi Sheet nhưng bỏ qua để chạy mạng", err));
+            }).catch(err => console.log("Gửi data sheet lỗi nhưng vẫn mở mạng", err));
 
-            // 2. Xử lý đóng gói tham số params gửi cho cơ chế fetch của VNDC bên ngoài Router
-            const loginUrl = getUrlParam('login_url');
-            const chapId = getUrlParam('chap_id');
-            const chapChallenge = getUrlParam('chap_challenge');
-            
-            const plainPassword = '123'; // Mật khẩu chung Hotspot
-            let encryptedPassword = plainPassword;
-
-            if (chapId && chapChallenge) {
-                encryptedPassword = md5(chapId + plainPassword + chapChallenge);
-            }
-
-            // Đóng gói đúng cấu trúc data.action và data.params theo chuẩn của file login gốc
-            const msgData = {
-                action: loginUrl, 
-                params: {
-                    username: sdtValue,
-                    password: encryptedPassword,
-                    dst: "https://toantitan.vn",
-                    popup: "false"
-                }
-            };
-
-            // 3. Bắn tín hiệu ra trang cha để Router thực hiện hàm fetch() mở mạng
+            // Đẩy tín hiệu đăng nhập ngược về trang mẹ chứa Router
             setTimeout(function() {
-                if (loginUrl) {
-                    window.parent.postMessage(msgData, "*");
+                if (window.parent !== window) {
+                    window.parent.postMessage({
+                        action: loginUrl,
+                        params: {
+                            username: sdtValue,
+                            password: "123", // Password đồng bộ với script Router
+                            dst: "https://toantitan.vn",
+                            popup: "false",
+                            'chap-id': chapId,
+                            'chap-challenge': chapChallenge
+                        }
+                    }, "*");
                 } else {
-                    alert("Chạy thử nghiệm giao diện thành công (Thiếu link login từ Router)");
+                    alert("Kết nối thành công! (Chế độ test cục bộ không có router)");
                     btn.disabled = false;
                     btn.innerHTML = '<span>Kết nối Internet</span> <i class="fa-solid fa-arrow-right"></i>';
                 }
