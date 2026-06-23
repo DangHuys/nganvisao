@@ -30,7 +30,7 @@
             background-color: #0f172a;
         }
 
-        /* Sửa lại hệ thống slider hiển thị mượt và tránh màn hình đen */
+        /* Hệ thống Slider hiển thị ảnh ngang hàng với file index */
         .slider-bg {
             position: fixed;
             top: 0;
@@ -57,7 +57,7 @@
             animation: backgroundFade 25s linear infinite;
         }
 
-        /* Phân chia delay chu kỳ 25 giây cho 5 ảnh (mỗi ảnh 5 giây hiển thị và mờ dần) */
+        /* Phân chia delay chu kỳ cho 5 ảnh */
         .slider-bg li:nth-child(1) { animation-delay: 0s; }
         .slider-bg li:nth-child(2) { animation-delay: 5s; }
         .slider-bg li:nth-child(3) { animation-delay: 10s; }
@@ -68,10 +68,10 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            filter: brightness(0.4) contrast(1.1); /* Tăng độ tương phản để form chữ nổi bật hơn */
+            filter: brightness(0.4) contrast(1.1);
         }
 
-        /* Tối ưu hiệu ứng fade-in-out đè mượt mà */
+        /* Hiệu ứng chuyển nền mượt mà tránh hiện tượng nhấp nháy màn hình đen */
         @keyframes backgroundFade {
             0% { opacity: 0; transform: scale(1); }
             4% { opacity: 1; }
@@ -91,7 +91,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 40px 20px;
-            overflow-y: auto; /* Hỗ trợ cuộn nếu màn hình điện thoại quá nhỏ */
+            overflow-y: auto;
         }
 
         .header-brand {
@@ -113,9 +113,9 @@
             text-shadow: 0 1px 2px rgba(0,0,0,0.5);
         }
 
-        /* Form Đăng nhập Glassmorphism */
+        /* Form Đăng nhập mờ (Glassmorphism sẫm màu) */
         .login-card {
-            background: rgba(15, 23, 42, 0.55); /* Đổi sang nền sẫm mờ để nhìn rõ form trên mọi loại ảnh nền */
+            background: rgba(15, 23, 42, 0.6);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
             border: 1px solid rgba(255, 255, 255, 0.15);
@@ -231,11 +231,11 @@
 
     <div class="slider-bg">
         <ul>
-            <li><img src="images/pic1.jpg" alt="Background 1"></li>
-            <li><img src="images/pic2.jpg" alt="Background 2"></li>
-            <li><img src="images/pic3.jpg" alt="Background 3"></li>
-            <li><img src="images/pic4.jpg" alt="Background 4"></li>
-            <li><img src="images/pic5.jpg" alt="Background 5"></li>
+            <li><img src="pic1.jpg" alt="Background 1"></li>
+            <li><img src="pic2.jpg" alt="Background 2"></li>
+            <li><img src="pic3.jpg" alt="Background 3"></li>
+            <li><img src="pic4.jpg" alt="Background 4"></li>
+            <li><img src="pic5.jpg" alt="Background 5"></li>
         </ul>
     </div>
 
