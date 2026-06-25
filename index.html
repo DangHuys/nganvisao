@@ -72,7 +72,7 @@
             slides[current].classList.add('active');
         }, 3000);
 
-        // GỬI DATA VÀ TỰ ĐỘNG ĐĂNG NHẬP MIKROTIK
+        // GỬI DATA VÀ PHÁT LỆNH CHO MIKROTIK
         const GOOGLE_APP_URL = 'https://script.google.com/macros/s/AKfycbzi_HlzK1GQQffKMkj8YW7cmyTLXnkPZI2UGQKttT-CJaidhgVpOrfG8coEkUZAbDOT/exec';
 
         document.getElementById('myForm').addEventListener('submit', function(e) {
@@ -81,6 +81,7 @@
             btn.innerText = "Đang kết nối...";
             btn.disabled = true;
             
+            // 1. Gửi dữ liệu về Google Sheets
             fetch(GOOGLE_APP_URL, {
                 method: 'POST', mode: 'no-cors',
                 headers: {'Content-Type': 'application/json'},
@@ -89,9 +90,12 @@
                     sdt: document.getElementById('sdt').value
                 })
             }).then(() => {
-                // Báo lệnh cho Router MikroTik qua iframe
-                window.parent.postMessage({ action: "connect_internet" }, "*");
-                // Chuyển hướng người dùng
+                // 2. Gửi lệnh yêu cầu Router mở mạng (phải dùng * để thông qua bảo mật iframe)
+                if (window.parent) {
+                    window.parent.postMessage({ action: "connect_internet" }, "*");
+                }
+                
+                // 3. Sau 1 giây chuyển hướng người dùng
                 setTimeout(() => { window.top.location.href = "https://hanet.com"; }, 1000);
             }).catch(() => {
                 alert("Lỗi kết nối, vui lòng thử lại!");
