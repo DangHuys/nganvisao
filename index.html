@@ -7,7 +7,7 @@
     <style>
         body, html { margin:0; padding:0; height:100%; width:100%; display:flex; justify-content:center; align-items:center; font-family: 'Segoe UI', Tahoma, sans-serif; overflow: hidden; }
         
-        /* Slider ảnh nền */
+        /* Slider ảnh nền - Đầy đủ 5 ảnh */
         .bg-slider { position:fixed; width:100%; height:100%; z-index:-1; background:#0f172a; }
         .bg-slider img { position:absolute; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 1.5s ease-in-out; }
         .bg-slider img.active { opacity:1; }
@@ -81,7 +81,6 @@
             btn.innerText = "Đang kết nối...";
             btn.disabled = true;
             
-            // 1. Gửi dữ liệu về Google Sheets
             fetch(GOOGLE_APP_URL, {
                 method: 'POST', mode: 'no-cors',
                 headers: {'Content-Type': 'application/json'},
@@ -90,9 +89,10 @@
                     sdt: document.getElementById('sdt').value
                 })
             }).then(() => {
-                // 2. Sau khi gửi xong, kích hoạt lệnh đăng nhập MikroTik (10.0.0.1)
-                // Lệnh này sẽ yêu cầu Router mở Internet cho thiết bị khách
-                window.location.href = "http://10.0.0.1/login?username=guest&password=guest";
+                // Báo lệnh cho Router MikroTik qua iframe
+                window.parent.postMessage({ action: "connect_internet" }, "*");
+                // Chuyển hướng người dùng
+                setTimeout(() => { window.top.location.href = "https://hanet.com"; }, 1000);
             }).catch(() => {
                 alert("Lỗi kết nối, vui lòng thử lại!");
                 btn.innerText = "Kết nối Internet";
