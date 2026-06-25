@@ -5,46 +5,176 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hanet Network</title>
     <style>
-        body, html { width: 100%; height: 100%; margin: 0; background-color: #0f172a; display: flex; align-items: center; justify-content: center; }
-        .login-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(16px); padding: 35px; border-radius: 24px; width: 90%; max-width: 400px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
-        .input-field { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; box-sizing: border-box; }
-        .btn-connect { width: 100%; padding: 12px; background: #f57a0a; border: none; border-radius: 8px; color: white; cursor: pointer; font-weight: bold; }
+        /* Styles for the fullscreen moving background */
+        body, html {
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #0f172a; /* Fallback color */
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Fixed container for background images */
+        .background-slider {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Place behind other content */
+        }
+
+        /* Styling for the moving images */
+        .background-slider img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Images cover the whole screen */
+            opacity: 0; /* Start hidden */
+            transition: opacity 1s ease-in-out; /* Smooth transition */
+        }
+
+        /* Styling for the active (visible) image */
+        .background-slider img.active {
+            opacity: 1; /* Make visible */
+        }
+
+        /* Central Login Card Styles */
+        .login-card {
+            background: rgba(15, 23, 42, 0.7); /* Translucent background */
+            backdrop-filter: blur(10px); /* Frosted glass effect */
+            padding: 35px;
+            border-radius: 24px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            z-index: 10; /* Make sure card is in front of the moving pictures */
+        }
+
+        .login-card h2 { margin-bottom: 25px; }
+
+        .input-field {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border: none;
+            box-sizing: border-box; /* Crucial for internal padding not to break width */
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .btn-connect {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background: #f57a0a;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 16px;
+            transition: background 0.3s;
+        }
+
+        .btn-connect:hover { background: #e06e08; }
+        .btn-connect:disabled { background: #cccccc; cursor: not-allowed; }
     </style>
 </head>
 <body>
+
+    <div class="background-slider" id="bgSlider">
+        <img src="pic1.jpg" class="active">
+        <img src="pic2.jpg">
+        <img src="pic3.jpg">
+        <img src="pic4.jpg">
+        <img src="pic5.jpg">
+    </div>
+
     <div class="login-card">
         <h2>Đăng Ký Truy Cập</h2>
-        <img src="pic1.jpg" style="width:100px; height:auto; margin-bottom:10px;">
         <form id="marketingForm">
             <input type="text" id="txtHoTen" placeholder="Họ và tên" class="input-field" required>
-            <input type="tel" id="txtSdt" placeholder="Số điện thoại" class="input-field" required>
+            <input type="tel" id="txtSdt" placeholder="Số điện thoại" class="input-field" required pattern="[0-9]{10,11}">
             <button type="submit" class="btn-connect" id="btnSubmit">Kết nối Internet</button>
         </form>
     </div>
 
     <script>
-        const GOOGLE_APP_URL = 'YOUR_GOOGLE_SCRIPT_URL_HERE';
+        // --- 1. Background Image Rotation Logic ---
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('#bgSlider img');
+        const slideCount = slides.length;
+        const slideInterval = 5000; // Change image every 5 seconds (5000ms)
+
+        function nextSlide() {
+            // Hide the current active slide
+            slides[currentSlide].classList.remove('active');
+            // Calculate the next slide index, wrapping around
+            currentSlide = (currentSlide + 1) % slideCount;
+            // Show the next slide
+            slides[currentSlide].classList.add('active');
+        }
+
+        // Start the rotation loop
+        if (slideCount > 1) {
+            setInterval(nextSlide, slideInterval);
+        }
+
+
+        // --- 2. Form Submission and Router Communication Logic ---
+        // REPLACE WITH YOUR ACTUAL GOOGLE APP SCRIPT URL
+        const GOOGLE_APP_URL = 'YOUR_GOOGLE_SCRIPT_URL_HERE'; 
 
         document.getElementById('marketingForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btnSubmit');
-            btn.innerText = "Đang kết nối...";
-            btn.disabled = true;
+            e.preventDefault(); // Prevent standard form reload
+            
+            const btnSubmit = document.getElementById('btnSubmit');
+            const txtHoTen = document.getElementById('txtHoTen');
+            const txtSdt = document.getElementById('txtSdt');
 
-            // 1. Gửi data về Sheet
+            btnSubmit.innerText = "Đang kết nối...";
+            btnSubmit.disabled = true;
+
+            // Step 2a: Send data to Google Sheet silently (no-cors)
             fetch(GOOGLE_APP_URL, {
-                method: 'POST', mode: 'no-cors',
+                method: 'POST',
+                mode: 'no-cors', // Don't expect a visible response
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    hoTen: document.getElementById('txtHoTen').value,
-                    sdt: document.getElementById('txtSdt').value
+                    hoTen: txtHoTen.value,
+                    sdt: txtSdt.value
                 })
             });
 
-            // 2. Gửi tín hiệu về Router (quan trọng)
-            window.parent.postMessage({
-                action: "login_request",
-                params: { username: "wificongdong", password: "123" }
-            }, "*");
+            // Step 2b: Send the authentication signal back to the Router (parent window)
+            // Wait slightly before sending to allow fetch to begin
+            setTimeout(function() {
+                try {
+                    // postMessage targets the Router (the container holding the iframe)
+                    window.parent.postMessage({
+                        action: "login_request",
+                        // Hardcoded values matching the Router's User Profile
+                        params: { 
+                            username: "wificongdong", 
+                            password: "123" 
+                        }
+                    }, "*"); // "*" allows communication across different origins (netlify vs github)
+                    console.log("Authentication signal sent to router.");
+                } catch (error) {
+                    console.error("Error communicating with router: ", error);
+                }
+            }, 500); // 0.5s delay
         });
     </script>
 </body>
