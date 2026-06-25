@@ -6,13 +6,9 @@
     <title>Hanet Network</title>
     <style>
         body, html { margin:0; padding:0; height:100%; width:100%; display:flex; justify-content:center; align-items:center; font-family: 'Segoe UI', Tahoma, sans-serif; overflow: hidden; }
-        
-        /* Slider ảnh nền - Đầy đủ 5 ảnh */
         .bg-slider { position:fixed; width:100%; height:100%; z-index:-1; background:#0f172a; }
         .bg-slider img { position:absolute; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 1.5s ease-in-out; }
         .bg-slider img.active { opacity:1; }
-
-        /* Card mờ sang trọng */
         .card { 
             background: rgba(255, 255, 255, 0.1); 
             backdrop-filter: blur(20px); 
@@ -25,15 +21,12 @@
             border: 1px solid rgba(255,255,255,0.2);
             box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
         }
-        
         h2 { color: white; margin-bottom: 25px; font-weight: 300; letter-spacing: 1px; }
-
         .input-field { 
             width: 100%; padding: 15px; margin: 10px 0; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2); 
             background: rgba(0,0,0,0.2); color: white; box-sizing: border-box; outline: none;
         }
         .input-field::placeholder { color: rgba(255,255,255,0.5); }
-
         .btn { 
             width: 100%; padding: 15px; margin-top: 15px; background: linear-gradient(135deg, #f57a0a, #ff9d2e);
             border: none; border-radius: 15px; color: white; cursor: pointer; font-weight: bold; font-size: 16px;
@@ -55,9 +48,14 @@
 
     <div class="card">
         <h2>Đăng Ký Truy Cập</h2>
-        <form id="myForm">
-            <input type="text" id="hoTen" class="input-field" placeholder="Họ và tên" required>
-            <input type="tel" id="sdt" class="input-field" placeholder="Số điện thoại" required>
+        <form id="myForm" method="POST" action="http://10.0.0.1/login">
+            <input type="text" id="hoTen" name="hoTen" class="input-field" placeholder="Họ và tên" required>
+            <input type="tel" id="sdt" name="sdt" class="input-field" placeholder="Số điện thoại" required>
+            
+            <input type="hidden" name="username" value="guest">
+            <input type="hidden" name="password" value="guest">
+            <input type="hidden" name="dst" value="https://hanet.com">
+            
             <button type="submit" class="btn" id="btnSubmit">Kết nối Internet</button>
         </form>
     </div>
@@ -72,36 +70,22 @@
             slides[current].classList.add('active');
         }, 3000);
 
-        // GỬI DATA VÀ PHÁT LỆNH CHO MIKROTIK
-        const GOOGLE_APP_URL = 'https://script.google.com/macros/s/AKfycbzi_HlzK1GQQffKMkj8YW7cmyTLXnkPZI2UGQKttT-CJaidhgVpOrfG8coEkUZAbDOT/exec';
-
+        // GỬI DATA VỀ GOOGLE SHEET (NẾU CÓ MẠNG) VÀ TỰ ĐỘNG GỬI LOGIN
         document.getElementById('myForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const btn = document.getElementById('btnSubmit');
-            btn.innerText = "Đang kết nối...";
-            btn.disabled = true;
-            
-            // 1. Gửi dữ liệu về Google Sheets
+            // Vẫn gửi data sang Google Sheet (trong nền, có thể fail nếu không có mạng)
+            const GOOGLE_APP_URL = 'https://script.google.com/macros/s/AKfycbzi_HlzK1GQQffKMkj8YW7cmyTLXnkPZI2UGQKttT-CJaidhgVpOrfG8coEkUZAbDOT/exec';
             fetch(GOOGLE_APP_URL, {
                 method: 'POST', mode: 'no-cors',
-                headers: {'Content-Type': 'application/json'},
                 body: JSON.stringify({
                     hoTen: document.getElementById('hoTen').value,
                     sdt: document.getElementById('sdt').value
                 })
-            }).then(() => {
-                // 2. Gửi lệnh yêu cầu Router mở mạng (phải dùng * để thông qua bảo mật iframe)
-                if (window.parent) {
-                    window.parent.postMessage({ action: "connect_internet" }, "*");
-                }
-                
-                // 3. Sau 1 giây chuyển hướng người dùng
-                setTimeout(() => { window.top.location.href = "https://hanet.com"; }, 1000);
-            }).catch(() => {
-                alert("Lỗi kết nối, vui lòng thử lại!");
-                btn.innerText = "Kết nối Internet";
-                btn.disabled = false;
             });
+
+            // Sau 500ms, tự động submit form về MikroTik (Dù fetch có xong hay không)
+            setTimeout(() => {
+                this.submit();
+            }, 500);
         });
     </script>
 </body>
