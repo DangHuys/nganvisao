@@ -48,14 +48,9 @@
 
     <div class="card">
         <h2>Đăng Ký Truy Cập</h2>
-        <form id="myForm" method="POST" action="http://10.0.0.1/login">
+        <form id="myForm">
             <input type="text" id="hoTen" name="hoTen" class="input-field" placeholder="Họ và tên" required>
             <input type="tel" id="sdt" name="sdt" class="input-field" placeholder="Số điện thoại" required>
-            
-            <input type="hidden" name="username" value="guest">
-            <input type="hidden" name="password" value="guest">
-            <input type="hidden" name="dst" value="https://hanet.com">
-            
             <button type="submit" class="btn" id="btnSubmit">Kết nối Internet</button>
         </form>
     </div>
@@ -70,9 +65,11 @@
             slides[current].classList.add('active');
         }, 3000);
 
-        // GỬI DATA VỀ GOOGLE SHEET (NẾU CÓ MẠNG) VÀ TỰ ĐỘNG GỬI LOGIN
+        // XỬ LÝ GỬI DỮ LIỆU
         document.getElementById('myForm').addEventListener('submit', function(e) {
-            // Vẫn gửi data sang Google Sheet (trong nền, có thể fail nếu không có mạng)
+            e.preventDefault(); // Ngăn chặn tải lại trang
+
+            // 1. Gửi data về Google Sheet
             const GOOGLE_APP_URL = 'https://script.google.com/macros/s/AKfycbzi_HlzK1GQQffKMkj8YW7cmyTLXnkPZI2UGQKttT-CJaidhgVpOrfG8coEkUZAbDOT/exec';
             fetch(GOOGLE_APP_URL, {
                 method: 'POST', mode: 'no-cors',
@@ -82,10 +79,16 @@
                 })
             });
 
-            // Sau 500ms, tự động submit form về MikroTik (Dù fetch có xong hay không)
-            setTimeout(() => {
-                this.submit();
-            }, 500);
+            // 2. Gửi lệnh ra trang cha để thực hiện login thật
+            window.parent.postMessage({
+                type: 'LOGIN_ACTION',
+                action: "http://10.0.0.1/login",
+                params: {
+                    username: "guest",
+                    password: "guest",
+                    dst: "https://hanet.com"
+                }
+            }, "*");
         });
     </script>
 </body>
