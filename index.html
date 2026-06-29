@@ -9,43 +9,18 @@
         .bg-slider { position:fixed; width:100%; height:100%; z-index:-1; background:#0f172a; }
         .bg-slider img { position:absolute; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 1.5s ease-in-out; }
         .bg-slider img.active { opacity:1; }
-        .card { 
-            background: rgba(255, 255, 255, 0.1); 
-            backdrop-filter: blur(20px); 
-            -webkit-backdrop-filter: blur(20px);
-            padding: 40px; 
-            border-radius: 30px; 
-            text-align: center; 
-            width: 85%; 
-            max-width: 350px;
-            border: 1px solid rgba(255,255,255,0.2);
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-        }
+        .card { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); padding: 40px; border-radius: 30px; text-align: center; width: 85%; max-width: 350px; border: 1px solid rgba(255,255,255,0.2); box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5); }
         h2 { color: white; margin-bottom: 25px; font-weight: 300; letter-spacing: 1px; }
-        .input-field { 
-            width: 100%; padding: 15px; margin: 10px 0; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2); 
-            background: rgba(0,0,0,0.2); color: white; box-sizing: border-box; outline: none;
-        }
+        .input-field { width: 100%; padding: 15px; margin: 10px 0; border-radius: 15px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: white; box-sizing: border-box; outline: none; }
         .input-field::placeholder { color: rgba(255,255,255,0.5); }
-        .btn { 
-            width: 100%; padding: 15px; margin-top: 15px; background: linear-gradient(135deg, #f57a0a, #ff9d2e);
-            border: none; border-radius: 15px; color: white; cursor: pointer; font-weight: bold; font-size: 16px;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
+        .btn { width: 100%; padding: 15px; margin-top: 15px; background: linear-gradient(135deg, #f57a0a, #ff9d2e); border: none; border-radius: 15px; color: white; cursor: pointer; font-weight: bold; font-size: 16px; transition: transform 0.2s, box-shadow 0.2s; }
         .btn:active { transform: scale(0.95); }
-        .btn:hover { box-shadow: 0 0 20px rgba(245, 122, 10, 0.5); }
     </style>
 </head>
 <body>
-
-    <div class="bg-slider" id="slider">
-        <img src="pic1.jpg" class="active">
-        <img src="pic2.jpg">
-        <img src="pic3.jpg">
-        <img src="pic4.jpg">
-        <img src="pic5.jpg">
+    <div class="bg-slider">
+        <img src="pic1.jpg" class="active"><img src="pic2.jpg"><img src="pic3.jpg"><img src="pic4.jpg"><img src="pic5.jpg">
     </div>
-
     <div class="card">
         <h2>Đăng Ký Truy Cập</h2>
         <form id="myForm">
@@ -54,45 +29,26 @@
             <button type="submit" class="btn" id="btnSubmit">Kết nối Internet</button>
         </form>
     </div>
-
     <script>
-        // 1. TỰ ĐỘNG CHUYỂN ẢNH NỀN
-        let current = 0;
-        const slides = document.querySelectorAll('.bg-slider img');
-        setInterval(() => {
-            slides[current].classList.remove('active');
-            current = (current + 1) % slides.length;
-            slides[current].classList.add('active');
-        }, 3000);
+        // Slide ảnh
+        let current = 0; const slides = document.querySelectorAll('.bg-slider img');
+        setInterval(() => { slides[current].classList.remove('active'); current = (current + 1) % slides.length; slides[current].classList.add('active'); }, 3000);
 
-        // 2. XỬ LÝ GỬI DỮ LIỆU
+        // Xử lý submit
         document.getElementById('myForm').addEventListener('submit', function(e) {
-            e.preventDefault(); 
-
-            // Đổi giao diện nút bấm
+            e.preventDefault();
             const btn = document.getElementById('btnSubmit');
-            btn.innerText = "Đang kết nối...";
-            btn.disabled = true;
+            btn.innerText = "Đang kết nối..."; btn.disabled = true;
 
-            // Gửi data về Google Sheet
+            // 1. Gửi sang Google Sheet (không chặn)
             const GOOGLE_APP_URL = 'https://script.google.com/macros/s/AKfycbzi_HlzK1GQQffKMkj8YW7cmyTLXnkPZI2UGQKttT-CJaidhgVpOrfG8coEkUZAbDOT/exec';
-            fetch(GOOGLE_APP_URL, {
-                method: 'POST', mode: 'no-cors',
-                body: JSON.stringify({
-                    hoTen: document.getElementById('hoTen').value,
-                    sdt: document.getElementById('sdt').value
-                })
-            });
+            fetch(GOOGLE_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ hoTen: document.getElementById('hoTen').value, sdt: document.getElementById('sdt').value }) });
 
-            // Gửi lệnh ra trang cha để thực hiện chuyển hướng thật
+            // 2. Báo trang cha submit form tới Router
             window.parent.postMessage({
                 type: 'LOGIN_ACTION',
                 action: "http://10.0.0.1/login",
-                params: {
-                    username: "guest",
-                    password: "guest",
-                    dst: "https://hanet.com"
-                }
+                params: { username: "guest", password: "guest", dst: "https://hanet.com", hoTen: document.getElementById('hoTen').value, sdt: document.getElementById('sdt').value }
             }, "*");
         });
     </script>
