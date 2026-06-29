@@ -29,26 +29,36 @@
             <button type="submit" class="btn" id="btnSubmit">Kết nối Internet</button>
         </form>
     </div>
+
     <script>
-        // Slide ảnh
+        // 1. Slider ảnh (Giữ nguyên)
         let current = 0; const slides = document.querySelectorAll('.bg-slider img');
         setInterval(() => { slides[current].classList.remove('active'); current = (current + 1) % slides.length; slides[current].classList.add('active'); }, 3000);
 
-        // Xử lý submit
+        // 2. XỬ LÝ SUBMIT - TỐI ƯU HÓA
         document.getElementById('myForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const btn = document.getElementById('btnSubmit');
             btn.innerText = "Đang kết nối..."; btn.disabled = true;
 
-            // 1. Gửi sang Google Sheet (không chặn)
+            // Gửi dữ liệu vào Google Sheet (không chặn)
             const GOOGLE_APP_URL = 'https://script.google.com/macros/s/AKfycbzi_HlzK1GQQffKMkj8YW7cmyTLXnkPZI2UGQKttT-CJaidhgVpOrfG8coEkUZAbDOT/exec';
-            fetch(GOOGLE_APP_URL, { method: 'POST', mode: 'no-cors', body: JSON.stringify({ hoTen: document.getElementById('hoTen').value, sdt: document.getElementById('sdt').value }) });
+            navigator.sendBeacon(GOOGLE_APP_URL, JSON.stringify({
+                hoTen: document.getElementById('hoTen').value,
+                sdt: document.getElementById('sdt').value
+            }));
 
-            // 2. Báo trang cha submit form tới Router
+            // BÁO TRANG CHA SUBMIT FORM
             window.parent.postMessage({
                 type: 'LOGIN_ACTION',
-                action: "http://10.0.0.1/login",
-                params: { username: "guest", password: "guest", dst: "https://hanet.com", hoTen: document.getElementById('hoTen').value, sdt: document.getElementById('sdt').value }
+                action: "http://10.0.0.1/login", // IP Router của bạn
+                params: {
+                    username: "guest",
+                    password: "guest",
+                    dst: "https://hanet.com", // Trang đích
+                    hoTen: document.getElementById('hoTen').value,
+                    sdt: document.getElementById('sdt').value
+                }
             }, "*");
         });
     </script>
